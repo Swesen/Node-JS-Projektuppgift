@@ -48,4 +48,4 @@ div
 ```
 <h1>titel</h1>
   <p>variabelnamn1: data1</p>
-  <p>variabelnamn2:data2/p>
+  <p>variabelnamn2:data2</p>
