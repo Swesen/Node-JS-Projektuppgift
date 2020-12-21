@@ -16,8 +16,27 @@ app.get("/", (req, res) => {
 });
 
 function injectTopBar(page) {
-page = page.toString().split("%topbar%");
-return page[0] + fs.readFileSync(webpagesFolder + "/topbar.html") + page[1];
+    page = page.toString().split("%topbar%");
+    return page[0] + fs.readFileSync(webpagesFolder + "/topbar.html") + page[1];
+}
+
+function buildPage(pageName) {
+
+}
+
+function injectHTMLelement(page, elementFileName, injectKey) {
+    page = page.toString().split(injectKey);
+    if (page.Length == 1) {
+        return page;
+    } else if (page.Length == 2) {
+        return page[0] + fs.readFileSync(webpagesFolder + elementFileName) + page[1];
+    }
+
+    var errPage
+    for (var i = 0; i < page.Length - 1; i++) {
+        errPage = page[i] + "ERROR: Multiple injectionKeys!";
+    }
+    return errPage + page[page.Length - 1];
 }
 
 app.listen(8080, "0.0.0.0");
