@@ -1,7 +1,7 @@
 # Specifikation
 
 1.	Linus Boréus
-2.	Dataspar
+2.	Datahålet
 3.	Personliga konfigurerbara databaser
 4.	Program data.
 5.	Funktionalitet:
