@@ -1,0 +1,97 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+var express = require("express");
+var fs = require("fs");
+var url = require("url");
+var passport = require("passport");
+var flash = require("express-flash");
+var session = require("express-session");
+
+var initializePassport = require("./passport-config")
+initializePassport(passport);
+
+var userManager = require("./userManager");
+var app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+var webpagesFolder = __dirname + "/webpages";
+
+// public pages
+app.get("/*", (req, res) => {
+    // get the url path name
+    var urlPath = url.parse(req.url, true).pathname;
+
+    // redirect
+    switch (urlPath) {
+        case "/":
+            urlPath = "/home"
+            break;
+        default:
+            break;
+    }
+
+    res.sendFile(webpagesFolder + urlPath + ".html", (err) => {
+        if (err) {
+            res.status(err.status).end();
+        }
+    });
+
+});
+
+app.get("/account", checkAuthenticated, async (req, res) => {
+    // only accept loggen in users
+});
+
+app.post("/authenticate", async (req, res) => {
+    var authenticated = await userManager.checkLogin(req.body.userName, req.body.password);
+
+    res.write("Auth: " + authenticated);
+    res.end();
+});
+
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+
+
+app.post("/registerNew", async (req, res) => {
+    var userName = req.body.userName;
+    var password = req.body.password;
+
+    console.log("Register try: Username: " + userName + ", Pass: " + password);
+    var registered = await userManager.registerNewUser(userName, password);
+
+    console.log("Register successfull: " + registered);
+    res.redirect("/login");
+});
+
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    res.redirect('/login');
+}
+
+function checkNotAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect('/');
+    }
+    return next();
+}
+
+app.listen(8080, "0.0.0.0");
