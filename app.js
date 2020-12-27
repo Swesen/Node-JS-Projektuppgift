@@ -26,8 +26,7 @@ app.get("/*", (req, res) => {
             var unorderedList = "<ul>"
             for (let i = 0; i < linkList.length - 1; i++) {
                 var parsedLink = JSON.parse(linkList[i]);
-                console.log(url.parse(parsedLink.link).hostname + '/favicon.ico');
-                unorderedList += '<li>' + '<a target="_blank" href="' + parsedLink.link + '">' + parsedLink.title + ' - <img src="http://' + url.parse(parsedLink.link).hostname + '/favicon.ico">' +  '</a></li>';
+                unorderedList += '<li>' + '<a target="_blank" href="' + parsedLink.link + '">' + parsedLink.title + ' - <img src="http://' + url.parse(parsedLink.link).hostname + '/favicon.ico" alt="/link.png" onerror="this.src=this.alt">' +  '</a></li>';
             }
             unorderedList += "</ul>"
             pageBuilder.bodyInsertAtKey("%linkList%", unorderedList);
