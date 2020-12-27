@@ -48,8 +48,6 @@ app.get("/*", (req, res) => {
 
 app.post("/post", (req, res) => {
     var link = { title: req.body.title, link: req.body.link };
-    console.log(link.title + ", länk: " + link.link);
-    console.log(link);
     fs.appendFileSync("./link.lis", JSON.stringify(link) + "\n");
     res.redirect("/post");
 });
