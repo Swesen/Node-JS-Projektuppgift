@@ -9,5 +9,7 @@
     * b.	Lägga upp länkar
     * c. Krävs att man har ett konto för att lägga upp länkar
     * d. Användarens namn som lagt upp länken visas bredvid länkarna
-    * e. Klassificera länkarna t.ex: roligt, nyhet, meme, nsfw. 
+    * e. Klassificera länkarna t.ex: roligt, nyhet, meme, nsfw.
+    * f. +1/-1 rankning
+    * g. toplista
 6.	Prio: a, b
