@@ -1,54 +1,58 @@
 var express = require("express");
 var fs = require("fs");
+const { hostname } = require("os");
 var url = require("url");
-var userManager = require("./userManager");
+var pageBuilder = require("./pageBuilder");
 
 var app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-var webpagesFolder = __dirname + "/webpages";
+var webPageNavbar = "./pageBlocks/navbar.html";
 
-var loggedInUsers = [];
-
-// public pages
 app.get("/*", (req, res) => {
-    // get the url path name
     var urlPath = url.parse(req.url, true).pathname;
 
-    // redirect
+    pageBuilder.addToHead('<meta charset="utf-8"/><link rel="stylesheet" href="/css/style.css"></link>');
+
+    pageBuilder.addBlockToBody(webPageNavbar);
+
     switch (urlPath) {
         case "/":
-            urlPath = "/home"
+            pageBuilder.addToHead('<title>Länklådan</title><link rel="script" href="/JS/homed.js"></link>');
+            pageBuilder.addBlockToBody("./pageBlocks/home.html")
+            var linkList = fs.readFileSync("./link.lis").toString().split("\n");
+            var unorderedList = "<ul>"
+            for (let i = 0; i < linkList.length - 1; i++) {
+                var parsedLink = JSON.parse(linkList[i]);
+                console.log(url.parse(parsedLink.link).hostname + '/favicon.ico');
+                unorderedList += '<li>' + '<a target="_blank" href="' + parsedLink.link + '">' + parsedLink.title + ' - <img src="http://' + url.parse(parsedLink.link).hostname + '/favicon.ico">' +  '</a></li>';
+            }
+            unorderedList += "</ul>"
+            pageBuilder.bodyInsertAtKey("%linkList%", unorderedList);
+            break;
+        case "/post":
+            pageBuilder.addToHead('<title>Lägg till länk - Länklådan</title><link rel="script" href="/JS/post.js"></link>');
+            pageBuilder.addBlockToBody("./pageBlocks/post.html")
+
             break;
         default:
-            break;
+            res.sendStatus(404);
+            pageBuilder.clearPage();
+            return;
     }
 
-    res.sendFile(webpagesFolder + urlPath + ".html", (err) => {
-        if (err) {
-            res.status(err.status).end();
-        }
-    });
+    res.send(pageBuilder.buildPage()).end();
 
 });
 
-app.post('/login', (req, res) => {
-    userManager.authenticateUser(req.body.userName, req.body.password, (err, sessionID, userName) => {
-
-    });
-});
-
-app.post("/registerNew", async (req, res) => {
-    var userName = req.body.userName;
-    var password = req.body.password;
-
-    console.log("Register try: Username: " + userName + ", Pass: " + password);
-    var registered = await userManager.registerNewUser(userName, password);
-
-    console.log("Register successfull: " + registered);
-    res.redirect("/login");
+app.post("/post", (req, res) => {
+    var link = { title: req.body.title, link: req.body.link };
+    console.log(link.title + ", länk: " + link.link);
+    console.log(link);
+    fs.appendFileSync("./link.lis", JSON.stringify(link) + "\n");
+    res.redirect("/post");
 });
 
 app.listen(8080, "0.0.0.0");
