@@ -20,7 +20,7 @@ app.get("/*", (req, res) => {
 
     switch (urlPath) {
         case "/":
-            pageBuilder.addToHead('<title>Länklådan</title><link rel="script" href="/JS/homed.js"></link>');
+            pageBuilder.addToHead('<title>Länklådan</title><link rel="script" href="/JS/homed.js"/><link rel="icon" type="image/png" href="/favicon.png"/>');
             pageBuilder.addBlockToBody("./pageBlocks/links.html")
             var linkList = fs.readFileSync("./link.lis").toString().split("\n");
             var unorderedList = "<ul>"
@@ -31,11 +31,12 @@ app.get("/*", (req, res) => {
             unorderedList += "</ul>"
             pageBuilder.bodyInsertAtKey("%linkList%", unorderedList);
             break;
+
         case "/post":
             pageBuilder.addToHead('<title>Lägg till länk - Länklådan</title><link rel="script" href="/JS/post.js"></link>');
             pageBuilder.addBlockToBody("./pageBlocks/postform.html")
-
             break;
+
         default:
             res.sendStatus(404);
             pageBuilder.clearPage();
