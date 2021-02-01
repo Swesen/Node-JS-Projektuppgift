@@ -22,17 +22,12 @@ header * {
 
 header li {
     line-height: 40px;
-    border-left: solid 2px #0f0f0f;
-}
-
-header li:last-child {
-    border-right: solid 2px #0f0f0f;
 }
 
 li, a, button {
     text-decoration: none;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 nav {
@@ -70,7 +65,8 @@ button:hover {
 }
 
 form, .link-box {
-    width: 400px;
+    width: 100%;
+    min-width: 400px;
     border: 3px solid #575757;
     padding: 15px;
     margin: 10px;
@@ -86,7 +82,7 @@ input[type=text], input[type=password] {
     margin: 8px 0;
     display: inline-block;
     border: none;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 5px;
     border-bottom: dotted 3px #0f0f0f;
     background-color: #242424;
@@ -104,8 +100,8 @@ input[type=text]:valid, input[type=password]:valid {
 }
 
 .center-page {
-    margin: auto;
-    max-width: 1080px;
+    margin: 0 auto;
+    max-width: 90%;
 }
 
 .center-contents {
@@ -127,12 +123,32 @@ input[type=text]:valid, input[type=password]:valid {
 }
 
 .link-box a {
+    line-height: 30px;
+    display: inline-block;
+    min-width: 300px;
     background-color: #464646;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 4px;
 }
 
 .logo {
     height: 50px;
     vertical-align: middle;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+footer {
+    margin-top: auto;
+    border-top: solid 5px #8a1515;
+    padding: 20px 0;
+}
+
+footer, footer * {
+    background-color: #464646;
 }
